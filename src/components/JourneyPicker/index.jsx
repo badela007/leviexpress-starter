@@ -6,16 +6,12 @@ export const CityOptions = ({ cities }) => {
   return (
     <>
       <option value="">Vyberte</option>
-
-      {cities.map((city) => {
-        return (
-          <>
-            <option key={city.code} value={city.code}>
-              {city.name}
-            </option>
-          </>
-        );
-      })}
+      {cities.map((city) => (
+        <option key={city.code} value={city.code}>
+          {city.name}
+        </option>
+      ))}
+      ;
     </>
   );
 };
@@ -24,18 +20,25 @@ export const JourneyPicker = ({ onJourneyChange }) => {
   const [fromCity, setFromCity] = useState('');
   const [toCity, setToCity] = useState('');
   const [date, setDate] = useState('');
-  const [cities, setCities] = useState([
-    { name: 'Praha', code: 'CZ-PRG' },
-    { name: 'Brno', code: 'CZ-BRQ' },
-  ]);
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      const resp = await fetch(
+        'https://apps.kodim.cz/daweb/leviexpress/api/cities ',
+      );
+      const data = await resp.json();
+      setCities(data.results);
+    };
+    fetchCities();
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Odesílám formulář s cestou');
-    console.log(fromCity);
-    console.log(toCity);
-    console.log(date);
-    console.log(cities);
+    //TODO
+    console.log(
+      `Uživatel chcete objednat jízdenku z ${fromCity} do ${toCity} na ${date}`,
+    );
   };
 
   return (
